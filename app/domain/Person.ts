@@ -10,4 +10,5 @@ export class Person {
         this.age = age;
         this.salary = salary;
     }
+
 }

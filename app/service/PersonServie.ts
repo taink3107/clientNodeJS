@@ -6,4 +6,7 @@ export class PersonServie {
     getAll():Person[]{
         return this.pr.findAll();
     }
+    getOne(k):Person{
+        return this.pr.findOne(k);
+    }
 }

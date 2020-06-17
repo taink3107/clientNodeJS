@@ -11203,7 +11203,28 @@ if ( typeof noGlobal === "undefined" ) {
 return jQuery;
 } );
 
-},{"process":"C:/Users/Tai Khanh Nguyen/AppData/Roaming/npm/node_modules/parcel-bundler/node_modules/process/browser.js"}],"app/util/Constants.ts":[function(require,module,exports) {
+},{"process":"C:/Users/Tai Khanh Nguyen/AppData/Roaming/npm/node_modules/parcel-bundler/node_modules/process/browser.js"}],"app/domain/Person.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Person = void 0;
+
+var Person =
+/** @class */
+function () {
+  function Person(name, age, salary) {
+    this.name = name;
+    this.age = age;
+    this.salary = salary;
+  }
+
+  return Person;
+}();
+
+exports.Person = Person;
+},{}],"app/util/Constants.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11214,7 +11235,7 @@ var BASE_URL = "http://localhost:8688/api_v1";
 exports.ENDPOINT = {
   person: {
     list: BASE_URL + "/person",
-    personID: BASE_URL + "/person/{id}"
+    personID: BASE_URL + "/person"
   },
   account: BASE_URL + "/account"
 };
@@ -11225,6 +11246,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.PersonRespository = void 0;
+
+var Person_1 = require("../domain/Person");
 
 var Constants_1 = require("../util/Constants");
 
@@ -11253,14 +11276,27 @@ function () {
   };
 
   PersonRespository.prototype.findOne = function (k) {
-    return undefined;
+    var p = new Person_1.Person(null, null, null);
+    $.ajax({
+      url: Constants_1.ENDPOINT.person.personID + k,
+      method: 'GET',
+      contentType: 'application/json',
+      async: false,
+      success: function success(data) {
+        $.extend(p, data);
+      },
+      error: function error(msg) {
+        $(location).attr('href', '/error.html');
+      }
+    });
+    return p;
   };
 
   return PersonRespository;
 }();
 
 exports.PersonRespository = PersonRespository;
-},{"../util/Constants":"app/util/Constants.ts","jquery":"node_modules/jquery/dist/jquery.js"}],"app/service/PersonServie.ts":[function(require,module,exports) {
+},{"../domain/Person":"app/domain/Person.ts","../util/Constants":"app/util/Constants.ts","jquery":"node_modules/jquery/dist/jquery.js"}],"app/service/PersonServie.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11281,6 +11317,10 @@ function () {
     return this.pr.findAll();
   };
 
+  PersonServie.prototype.getOne = function (k) {
+    return this.pr.findOne(k);
+  };
+
   return PersonServie;
 }();
 
@@ -11296,6 +11336,8 @@ var $ = require("jquery");
 
 var PersonServie_1 = require("./service/PersonServie");
 
+var Constants_1 = require("./util/Constants");
+
 $(document).ready(function () {
   var persons = new PersonServie_1.PersonServie().getAll();
   var ulEle = $("#persons");
@@ -11310,7 +11352,19 @@ $(document).ready(function () {
     ulEle.html(content_1);
   }
 });
-},{"jquery":"node_modules/jquery/dist/jquery.js","./service/PersonServie":"app/service/PersonServie.ts"}],"C:/Users/Tai Khanh Nguyen/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+$(document).ready(function () {
+  var xxx = $(location).attr("pathname");
+  console.log(Constants_1.ENDPOINT.person.personID + xxx);
+  var person = new PersonServie_1.PersonServie().getOne(xxx);
+  var h1Ele = $("#person");
+
+  if (person.age != null) {
+    h1Ele.html("<i>" + person.name + " - " + person.age + " - " + person.salary + "</i>");
+  } else {
+    h1Ele.html("del co thang nao ca");
+  }
+});
+},{"jquery":"node_modules/jquery/dist/jquery.js","./service/PersonServie":"app/service/PersonServie.ts","./util/Constants":"app/util/Constants.ts"}],"C:/Users/Tai Khanh Nguyen/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -11338,7 +11392,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62549" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51629" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
