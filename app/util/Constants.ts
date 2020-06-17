@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8888/api_v1";
+const BASE_URL = "http://localhost:8688/api_v1";
 
 export var ENDPOINT = {
     person: {

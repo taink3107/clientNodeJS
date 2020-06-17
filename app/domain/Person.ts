@@ -1,16 +1,13 @@
 export class Person {
     id: number;
-    firstname:string;
-    lastname:string;
-    age:number;
-    dob:string;
-    salary:number;
+    name: string;
+    age: number;
+    salary: number;
 
-    constructor(name:string,age:number,salary:number,firstname:string,lastname:string,dob:string) {
-        firstname = firstname;
-        age = age;
-        salary = salary;
-        lastname = lastname;
-        dob = dob;
+
+    constructor(name: string, age: number, salary: number) {
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
     }
 }

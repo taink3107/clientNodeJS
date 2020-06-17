@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/process/browser.js":[function(require,module,exports) {
+})({"C:/Users/Tai Khanh Nguyen/AppData/Roaming/npm/node_modules/parcel-bundler/node_modules/process/browser.js":[function(require,module,exports) {
 
 // shim for using process in browser
 var process = module.exports = {}; // cached from whatever global is present so that test runners that stub it
@@ -11203,14 +11203,14 @@ if ( typeof noGlobal === "undefined" ) {
 return jQuery;
 } );
 
-},{"process":"node_modules/process/browser.js"}],"app/util/Constants.ts":[function(require,module,exports) {
+},{"process":"C:/Users/Tai Khanh Nguyen/AppData/Roaming/npm/node_modules/parcel-bundler/node_modules/process/browser.js"}],"app/util/Constants.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ENDPOINT = void 0;
-var BASE_URL = "http://localhost:8888/api_v1";
+var BASE_URL = "http://localhost:8688/api_v1";
 exports.ENDPOINT = {
   person: {
     list: BASE_URL + "/person",
@@ -11297,12 +11297,20 @@ var $ = require("jquery");
 var PersonServie_1 = require("./service/PersonServie");
 
 $(document).ready(function () {
-  // let p:Person = new Person("Hieu",23,1000);
-  // console.log(p);
   var persons = new PersonServie_1.PersonServie().getAll();
-  console.log(persons);
+  var ulEle = $("#persons");
+
+  if (persons.length < 0) {
+    ulEle.html("<li>khong co person</li>");
+  } else {
+    var content_1 = "";
+    persons.forEach(function (value) {
+      return content_1 += "<li>" + value.name + " - " + value.age + " - " + value.salary + "</li>";
+    });
+    ulEle.html(content_1);
+  }
 });
-},{"jquery":"node_modules/jquery/dist/jquery.js","./service/PersonServie":"app/service/PersonServie.ts"}],"node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"jquery":"node_modules/jquery/dist/jquery.js","./service/PersonServie":"app/service/PersonServie.ts"}],"C:/Users/Tai Khanh Nguyen/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -11330,7 +11338,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45877" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62549" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -11506,5 +11514,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel/src/builtins/hmr-runtime.js","app/index.ts"], null)
+},{}]},{},["C:/Users/Tai Khanh Nguyen/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","app/index.ts"], null)
 //# sourceMappingURL=/app.af35efec.js.map

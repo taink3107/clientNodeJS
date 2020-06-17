@@ -1,10 +1,15 @@
 import $ = require("jquery");
 import {Person} from "./domain/Person";
 import {PersonServie} from "./service/PersonServie";
-$(document).ready(function () {
-    // let p:Person = new Person("Hieu",23,1000);
-    // console.log(p);
 
+$(document).ready(function () {
     let persons: Person[] = new PersonServie().getAll();
-    console.log(persons);
+    let ulEle = $("#persons");
+    if (persons.length < 0) {
+        ulEle.html("<li>khong co person</li>");
+    } else {
+        let content = "";
+        persons.forEach(value => content += `<li>${value.name} - ${value.age} - ${value.salary}</li>`)
+        ulEle.html(content);
+    }
 })
