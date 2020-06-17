@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Save Data</h1>
+<form id="formsave">
+    <table>
+        <tr>
+            <td>First Name</td>
+            <td><input type="text" id="firstname" name="firstname"></td>
+        </tr>
+        <tr>
+            <td>Last Name</td>
+            <td><input type="text"  id="lastname" name="lastname"></td>
+        </tr>
+        <tr>
+            <td>Age</td>
+            <td><input type="number"  id="age" name="age"></td>
+        </tr>
+        <tr>
+            <td>Salary</td>
+            <td><input type="number" step="any" id="salary" name="salary"></td>
+        </tr>
+        <tr>
+            <td>DoB</td>
+            <td><input type="date"  id="dob" name="dob"></td>
+        </tr>
+        <tr>
+            <td>Status</td>
+            <td><select id="status" name="status">
+                <option value="1">--All--</option>
+                <option value="2">ACTIVE</option>
+                <option value="3">INACTIVE</option>
+            </select></td>
+        </tr>
+    </table>
+    <br>
+    <input type="button" id="save" value="Save">
+    <input type="reset" id="reset" value="Reset">
+</form>
+</body>
+</html>

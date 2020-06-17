@@ -23,7 +23,7 @@ export class PersonRespository implements ICrudReponsitory<Person, any> {
     }
 
     findOne(k): Person {
-        let p: Person = new Person(null, null, null);
+        let p: Person = new Person(null, null, null, null, null, null);
         $.ajax({
             url: ENDPOINT.person.personID + k, // /1
             method: 'GET',
@@ -37,6 +37,21 @@ export class PersonRespository implements ICrudReponsitory<Person, any> {
             }
         })
         return p;
+    }
+
+    save(per: Person) {
+        $.ajax({
+            url: ENDPOINT.person.save,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(per),
+            async: false,
+            success: () => {
+                alert("sucess");
+            }, error: () => {
+                alert("error");
+            }
+        })
     }
 
 }
