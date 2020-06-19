@@ -3,11 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="/app/index.ts"></script>
+    <script src="app/index.ts"></script>
 </head>
 <body>
-<ul id="persons"></ul>
+<table>
+    <tr style="border: 1px aqua solid">
+        <td>
+            <label for="firstname">First Name</label>
+            <input type="search" id="firstname" name="firstname">
+            <input type="button" value="Search" id="btnSearch">
+        </td>
+        <td></td>
+        <td>
+            <label>Filter by Status</label>
+            <select name="status" id="status">
+                <option value="1">ACTIVE</option>
+                <option value="2">INACTIVE</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+    </tr>
+</table>
+<br>
+<br/>
+<table id="persons" style="float: left">
+    <thead>
+    <tr bgcolor="aqua">
+        <th>STT</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Salary</th>
+        <th>DoB</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody id="bodyPerson">
 
-    <h1 id="person"></h1>
+    </tbody>
+</table>
 </body>
 </html>

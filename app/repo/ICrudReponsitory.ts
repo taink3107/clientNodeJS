@@ -1,4 +1,4 @@
 export interface ICrudReponsitory<T,K> {
-    findAll():T[];
+    findAll(K):T[];
     findOne(k:K):T;
 }

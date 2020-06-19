@@ -5,15 +5,16 @@ import $ = require("jquery");
 
 
 export class PersonRespository implements ICrudReponsitory<Person, any> {
-    findAll(): Person[] {
+    findAll(param): Person[] {
         let p: Person[] = [];
         $.ajax({
-            url: ENDPOINT.person.list,
+            url: ENDPOINT.person.list + "?search=" + param,
             method: 'GET',
             contentType: 'application/json',
             async: false,
             success: (data: any) => {
                 $.extend(p, data);
+                console.log(p);
             },
             error: (msg) => {
                 console.log(msg)
@@ -25,7 +26,7 @@ export class PersonRespository implements ICrudReponsitory<Person, any> {
     findOne(k): Person {
         let p: Person = new Person(null, null, null, null, null, null);
         $.ajax({
-            url: ENDPOINT.person.personID + k, // /1
+            url: ENDPOINT.person.personID.replace("{id}", k), // /1
             method: 'GET',
             contentType: 'application/json',
             async: false,
@@ -40,18 +41,20 @@ export class PersonRespository implements ICrudReponsitory<Person, any> {
     }
 
     save(per: Person) {
+
         $.ajax({
             url: ENDPOINT.person.save,
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(per),
             async: false,
-            success: () => {
+            success: (data) => {
                 alert("sucess");
             }, error: () => {
                 alert("error");
             }
         })
     }
+
 
 }
