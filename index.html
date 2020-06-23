@@ -5,42 +5,107 @@
     <title>Title</title>
     <script src="app/index.ts"></script>
 </head>
-<body>
-<table>
-    <tr style="border: 1px aqua solid">
-        <td>
-            <label for="firstname">First Name</label>
-            <input type="search" id="firstname" name="firstname">
-            <input type="button" value="Search" id="btnSearch">
-        </td>
-        <td></td>
-        <td>
-            <label>Filter by Status</label>
-            <select name="status" id="status">
-                <option value="1">ACTIVE</option>
-                <option value="2">INACTIVE</option>
-            </select>
-        </td>
-    </tr>
-    <tr>
-    </tr>
-</table>
-<br>
-<br/>
-<table id="persons" style="float: left">
-    <thead>
-    <tr bgcolor="aqua">
-        <th>STT</th>
-        <th>Name</th>
-        <th>Age</th>
-        <th>Salary</th>
-        <th>DoB</th>
-        <th>Status</th>
-    </tr>
-    </thead>
-    <tbody id="bodyPerson">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<body style="background-color: darkgrey">
+<div class="container bg-white">
+    <div class="mt-5">
+        <div>
+            <form class="form-inline">
+                <div class="form-group mb-2">
+                    <input type="text" class="form-control" id="inputPassword2" placeholder="họ và tên "
+                           style="margin-top: 5px">
+                </div>
+                <div class="form-group mx-sm-2 mb-1">
+                    <select class="custom-select" id="inputGroupSelect01">
+                        <option selected>All</option>
+                        <option value="0">ACTIVE</option>
+                        <option value="1">INACTIVE</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-outline-dark mb-2" style="margin-top: 5px">Tìm kiếm</button>
+            </form>
+        </div>
+        <div>
+            <table id="persons" class="table">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Full Name</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Salary</th>
+                    <th scope="col">DoB</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Task</th>
+                    <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="pb-2">
+            <button class="btn"><img src="https://img.icons8.com/metro/26/000000/add-user-male.png"/></button>
+        </div>
 
-    </tbody>
-</table>
+
+        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Công việc của người dùng</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control" placeholder="tạo công việc mới" aria-label="task" aria-describedby="basic-addon1"><button class="btn mt-1"><img src="https://img.icons8.com/ios-glyphs/30/000000/add-property.png"/> Thêm mới công việc</button>
+                        <table class="table mt-3" id="tableTask" >
+                            <thead>
+                            <tr class="bg-warning">
+                                <th scope="col">STT</th>
+                                <th scope="col">Tên công việc</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Larry</td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 </body>
 </html>

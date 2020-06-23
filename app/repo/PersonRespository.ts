@@ -2,7 +2,7 @@ import {ICrudReponsitory} from "./ICrudReponsitory";
 import {Person} from "../domain/Person";
 import {ENDPOINT} from "../util/Constants";
 import $ = require("jquery");
-
+import {Task} from "../domain/Task";
 
 export class PersonRespository implements ICrudReponsitory<Person, any> {
     findAll(param): Person[] {
@@ -54,6 +54,22 @@ export class PersonRespository implements ICrudReponsitory<Person, any> {
                 alert("error");
             }
         })
+    }
+
+    getTaskById(value): Task {
+        let task: Task = new Task(null, null, null);
+        $.ajax({
+            url: ENDPOINT.task.getById.replace("{id}", value),
+            method: 'GET',
+            contentType: 'application/json',
+            async: false,
+            success: (data) => {
+                $.extend(task, data);
+            }, error: () => {
+                alert("error");
+            }
+        })
+        return task;
     }
 
 

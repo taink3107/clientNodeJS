@@ -11245,8 +11245,36 @@ exports.ENDPOINT = {
     personID: BASE_URL + "/person/{id}",
     save: BASE_URL + "/person/save"
   },
-  account: BASE_URL + "/account"
+  account: BASE_URL + "/account",
+  task: {
+    getById: BASE_URL + "/cate/{id}"
+  }
 };
+},{}],"app/domain/Task.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Task = void 0;
+
+var Task =
+/** @class */
+function () {
+  function Task(id, name, personId) {
+    this.id = id;
+    this.name = name;
+    this.personId = personId;
+  }
+
+  Task.prototype.toString = function () {
+    return "id=" + this.id + "name" + this.name;
+  };
+
+  return Task;
+}();
+
+exports.Task = Task;
 },{}],"app/repo/PersonRespository.ts":[function(require,module,exports) {
 "use strict";
 
@@ -11260,6 +11288,8 @@ var Person_1 = require("../domain/Person");
 var Constants_1 = require("../util/Constants");
 
 var $ = require("jquery");
+
+var Task_1 = require("../domain/Task");
 
 var PersonRespository =
 /** @class */
@@ -11317,11 +11347,28 @@ function () {
     });
   };
 
+  PersonRespository.prototype.getTaskById = function (value) {
+    var task = new Task_1.Task(null, null, null);
+    $.ajax({
+      url: Constants_1.ENDPOINT.task.getById.replace("{id}", value),
+      method: 'GET',
+      contentType: 'application/json',
+      async: false,
+      success: function success(data) {
+        $.extend(task, data);
+      },
+      error: function error() {
+        alert("error");
+      }
+    });
+    return task;
+  };
+
   return PersonRespository;
 }();
 
 exports.PersonRespository = PersonRespository;
-},{"../domain/Person":"app/domain/Person.ts","../util/Constants":"app/util/Constants.ts","jquery":"node_modules/jquery/dist/jquery.js"}],"app/service/PersonServie.ts":[function(require,module,exports) {
+},{"../domain/Person":"app/domain/Person.ts","../util/Constants":"app/util/Constants.ts","jquery":"node_modules/jquery/dist/jquery.js","../domain/Task":"app/domain/Task.ts"}],"app/service/PersonServie.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11348,6 +11395,10 @@ function () {
 
   PersonServie.prototype.save = function (p) {
     this.pr.save(p);
+  };
+
+  PersonServie.prototype.getTaskById = function (k) {
+    return this.pr.getTaskById(k);
   };
 
   return PersonServie;
@@ -17067,6 +17118,7 @@ var moment = require("moment");
 var Search_1 = require("./domain/Search");
 
 $(document).ready(function () {
+  console.log("dcmmmm");
   var searchParams = new URLSearchParams(window.location.search);
   var param = searchParams.get("search");
   var persons = new PersonServie_1.PersonServie().getAll(param);
@@ -17084,9 +17136,15 @@ $(document).ready(function () {
 });
 
 function processDate(value) {
-  var content = "<tr>\n        <td>" + value.id + "</td>\n        <td>" + value.firstname + " " + value.lastname + "</td>\n        <td>" + value.age + "</td>\n        <td>" + formatCurrency(value.salary, "VND") + "</td>\n        <td>" + formatDate(value.dob) + "</td>\n        <td>" + formatStatus(value.status) + "</td>\n    </tr>";
+  var content = "<tr>\n        <td scope=\"col\">" + value.id + "</td>\n        <td scope=\"col\">" + value.firstname + " " + value.lastname + "</td>\n        <td scope=\"col\">" + value.age + "</td>\n        <td scope=\"col\">" + formatCurrency(value.salary, "VND") + "</td>\n        <td scope=\"col\">" + formatDate(value.dob) + "</td>\n        <td scope=\"col\">" + formatStatus(value.status) + "</td>\n        <td scope=\"col\" class=\"showTask\"><button type=\"button\" class=\"btn btn-info\" data-toggle=\"modal\" data-target=\".bd-example-modal-lg\" data-value=\"" + value.id + "\" id=\"btnShow\">Show task</button></td>\n        <td scope=\"col\"><button type=\"button\" class=\"btn btn-success\" id=\"editPerson" + value.id + "\">Edit</button></td>\n    </tr>";
   return content;
 }
+
+$(document).on('click', '#persons .showTask #btnShow', function () {
+  var temp = $(this).attr('data-value');
+  var task = new PersonServie_1.PersonServie().getTaskById(temp);
+  console.log(task.toString());
+});
 
 function formatStatus(xxx) {
   if (xxx == "ACTIVE") {
@@ -17154,7 +17212,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61012" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51307" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

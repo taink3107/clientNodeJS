@@ -1,5 +1,6 @@
 import {Person} from "../domain/Person";
 import {PersonRespository} from "../repo/PersonRespository";
+import {Task} from "../domain/Task";
 
 export class PersonServie {
     private pr = new PersonRespository();
@@ -14,5 +15,9 @@ export class PersonServie {
 
     save(p: Person) {
         this.pr.save(p);
+    }
+
+    getTaskById(k): Task {
+        return this.pr.getTaskById(k);
     }
 }
