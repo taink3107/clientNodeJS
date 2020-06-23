@@ -9,10 +9,11 @@ export class Search {
 
     constructor(firstname: string, status: string) {
         this.firstname = firstname;
-        this.status = status;
+  // Sua lai status
+        this.status = "";
     }
 
     toString() {
-        return "search=firstname:" + this.firstname + "," +"status:"+st;
+        return "search=firstname:" + this.firstname + "," + "status:" + this.status;
     }
 }

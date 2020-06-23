@@ -2,6 +2,7 @@ import $ = require("jquery");
 import {Person} from "./domain/Person";
 import {PersonServie} from "./service/PersonServie";
 import moment = require("moment");
+import {Search} from "./domain/Search";
 
 $(document).ready(function () {
 
@@ -12,7 +13,6 @@ $(document).ready(function () {
     if (persons.length < 0) {
         ulEle.html("<li>khong co person</li>");
     } else {
-        console.log(persons.length)
         let content = "";
         persons.forEach(value => content += processDate(value))
         ulEle.append(content);
@@ -49,12 +49,11 @@ function formatDate(date: Date) {
 }
 
 $(document).ready(function () {
-    $("#btnSearch").on(`click`,function () {
-        var fisrtname = "firstname:" + $("#firstname").val();
-        alert(fisrtname);
-        var status = "lastname" + (($("#status").val() == 1) ? "ACTIVE" : "INACTIVE");
-        let param = "search=" + fisrtname + "," + status;
-        document.location.search = param;
+    $("#btnSearch").on(`click`, function () {
+        var fisrtname = $("#firstname").val();
+        var status = (($("#status").val() == 1) ? "ACTIVE" : "INACTIVE");
+        let param: Search = new Search(fisrtname, status);
+        document.location.search = param.toString();
     })
 })
 

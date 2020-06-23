@@ -17026,6 +17026,31 @@ var global = arguments[3];
 
 })));
 
+},{}],"app/domain/Search.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Search = void 0;
+
+var Search =
+/** @class */
+function () {
+  function Search(firstname, status) {
+    this.firstname = firstname; // Sua lai status
+
+    this.status = "";
+  }
+
+  Search.prototype.toString = function () {
+    return "search=firstname:" + this.firstname + "," + "status:" + this.status;
+  };
+
+  return Search;
+}();
+
+exports.Search = Search;
 },{}],"app/index.ts":[function(require,module,exports) {
 "use strict";
 
@@ -17039,6 +17064,8 @@ var PersonServie_1 = require("./service/PersonServie");
 
 var moment = require("moment");
 
+var Search_1 = require("./domain/Search");
+
 $(document).ready(function () {
   var searchParams = new URLSearchParams(window.location.search);
   var param = searchParams.get("search");
@@ -17048,7 +17075,6 @@ $(document).ready(function () {
   if (persons.length < 0) {
     ulEle.html("<li>khong co person</li>");
   } else {
-    console.log(persons.length);
     var content_1 = "";
     persons.forEach(function (value) {
       return content_1 += processDate(value);
@@ -17080,11 +17106,10 @@ function formatDate(date) {
 
 $(document).ready(function () {
   $("#btnSearch").on("click", function () {
-    var fisrtname = "firstname:" + $("#firstname").val();
-    alert(fisrtname);
-    var status = "lastname" + ($("#status").val() == 1 ? "ACTIVE" : "INACTIVE");
-    var param = "search=" + fisrtname + "," + status;
-    document.location.search = param;
+    var fisrtname = $("#firstname").val();
+    var status = $("#status").val() == 1 ? "ACTIVE" : "INACTIVE";
+    var param = new Search_1.Search(fisrtname, status);
+    document.location.search = param.toString();
   });
 }); // $(document).ready(function () {
 //     let xxx = $(location).attr("pathname");
@@ -17101,7 +17126,7 @@ $(document).ready(function () {
 //         h1Ele.html(`del co thang nao ca`)
 //     }
 // })
-},{"jquery":"node_modules/jquery/dist/jquery.js","./service/PersonServie":"app/service/PersonServie.ts","moment":"node_modules/moment/moment.js"}],"C:/Users/Tai Khanh Nguyen/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"jquery":"node_modules/jquery/dist/jquery.js","./service/PersonServie":"app/service/PersonServie.ts","moment":"node_modules/moment/moment.js","./domain/Search":"app/domain/Search.ts"}],"C:/Users/Tai Khanh Nguyen/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -17129,7 +17154,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59204" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61012" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
