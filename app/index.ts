@@ -6,7 +6,6 @@ import {Search} from "./domain/Search";
 import {Task} from "./domain/Task";
 
 $(document).ready(function () {
-    console.log("dcmmmm")
     let searchParams = new URLSearchParams(window.location.search)
     let param = searchParams.get("search");
     let persons: Person[] = new PersonServie().getAll(param);
@@ -29,16 +28,28 @@ function processDate(value: Person) {
         <td scope="col">${formatDate(value.dob)}</td>
         <td scope="col">${formatStatus(value.status)}</td>
         <td scope="col" class="showTask"><button type="button" class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-lg" data-value="${value.id}" id="btnShow">Show task</button></td>
-        <td scope="col"><button type="button" class="btn btn-success" id="editPerson${value.id}">Edit</button></td>
+        <td scope="col" class="editPerson" ><button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-sm" data-edit="${value.id}" id="editPerson">Edit</button></td>
     </tr>`
     return content;
 }
 
 $(document).on('click', '#persons .showTask #btnShow', function () {
+
     var temp = $(this).attr('data-value');
-    let task: Task = new PersonServie().getTaskById(temp);
-    console.log(task.toString());
+    let tasks: Task[] = new PersonServie().getTaskById(temp);
+    $("#valuePerson").val(temp);
+    let tableEle = $("#tableTask tbody");
+    if (tasks.length > 0) {
+        let content: string;
+        tasks.forEach(value => content += processDataTable(value));
+        tableEle.html(content);
+    }
 });
+
+function processDataTable(x: Task): string {
+    var content = `<tr><th scope="row">${x.id}</th><td>${x.name}</td></tr>`
+    return content;
+}
 
 function formatStatus(xxx: string) {
     if (xxx == "ACTIVE") {
@@ -66,6 +77,24 @@ $(document).ready(function () {
     })
 })
 
+$(document).on('click', '#persons .editPerson #editPerson', function () {
+
+    var temp = $(this).attr('data-edit');
+    let p: Person = new PersonServie().getOne(temp);
+    $("#editModal #txtFirstName").val(p.firstname);
+    $("#editModal #txtLastName").val(p.lastname);
+    $("#editModal #txtAge").val(p.age);
+    $("#editModal #txtDate").val(p.dob);
+    $("#editModal #txtSalary").val(p.salary);
+    let date = formatDate(p.dob);
+
+    $("#editModal #txtDate").val(moment(date).format('mm/dd/yyyy'));
+
+});
+
+$("#statusEdit").on('change', function () {
+    alert(this.value)
+})
 
 // $(document).ready(function () {
 //     let xxx = $(location).attr("pathname");

@@ -11247,34 +11247,10 @@ exports.ENDPOINT = {
   },
   account: BASE_URL + "/account",
   task: {
-    getById: BASE_URL + "/cate/{id}"
+    getById: BASE_URL + "/cate/{id}",
+    save: BASE_URL + "/cate/save"
   }
 };
-},{}],"app/domain/Task.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Task = void 0;
-
-var Task =
-/** @class */
-function () {
-  function Task(id, name, personId) {
-    this.id = id;
-    this.name = name;
-    this.personId = personId;
-  }
-
-  Task.prototype.toString = function () {
-    return "id=" + this.id + "name" + this.name;
-  };
-
-  return Task;
-}();
-
-exports.Task = Task;
 },{}],"app/repo/PersonRespository.ts":[function(require,module,exports) {
 "use strict";
 
@@ -11288,8 +11264,6 @@ var Person_1 = require("../domain/Person");
 var Constants_1 = require("../util/Constants");
 
 var $ = require("jquery");
-
-var Task_1 = require("../domain/Task");
 
 var PersonRespository =
 /** @class */
@@ -11348,7 +11322,7 @@ function () {
   };
 
   PersonRespository.prototype.getTaskById = function (value) {
-    var task = new Task_1.Task(null, null, null);
+    var task = [];
     $.ajax({
       url: Constants_1.ENDPOINT.task.getById.replace("{id}", value),
       method: 'GET',
@@ -11368,7 +11342,7 @@ function () {
 }();
 
 exports.PersonRespository = PersonRespository;
-},{"../domain/Person":"app/domain/Person.ts","../util/Constants":"app/util/Constants.ts","jquery":"node_modules/jquery/dist/jquery.js","../domain/Task":"app/domain/Task.ts"}],"app/service/PersonServie.ts":[function(require,module,exports) {
+},{"../domain/Person":"app/domain/Person.ts","../util/Constants":"app/util/Constants.ts","jquery":"node_modules/jquery/dist/jquery.js"}],"app/service/PersonServie.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17118,7 +17092,6 @@ var moment = require("moment");
 var Search_1 = require("./domain/Search");
 
 $(document).ready(function () {
-  console.log("dcmmmm");
   var searchParams = new URLSearchParams(window.location.search);
   var param = searchParams.get("search");
   var persons = new PersonServie_1.PersonServie().getAll(param);
@@ -17136,15 +17109,29 @@ $(document).ready(function () {
 });
 
 function processDate(value) {
-  var content = "<tr>\n        <td scope=\"col\">" + value.id + "</td>\n        <td scope=\"col\">" + value.firstname + " " + value.lastname + "</td>\n        <td scope=\"col\">" + value.age + "</td>\n        <td scope=\"col\">" + formatCurrency(value.salary, "VND") + "</td>\n        <td scope=\"col\">" + formatDate(value.dob) + "</td>\n        <td scope=\"col\">" + formatStatus(value.status) + "</td>\n        <td scope=\"col\" class=\"showTask\"><button type=\"button\" class=\"btn btn-info\" data-toggle=\"modal\" data-target=\".bd-example-modal-lg\" data-value=\"" + value.id + "\" id=\"btnShow\">Show task</button></td>\n        <td scope=\"col\"><button type=\"button\" class=\"btn btn-success\" id=\"editPerson" + value.id + "\">Edit</button></td>\n    </tr>";
+  var content = "<tr>\n        <td scope=\"col\">" + value.id + "</td>\n        <td scope=\"col\">" + value.firstname + " " + value.lastname + "</td>\n        <td scope=\"col\">" + value.age + "</td>\n        <td scope=\"col\">" + formatCurrency(value.salary, "VND") + "</td>\n        <td scope=\"col\">" + formatDate(value.dob) + "</td>\n        <td scope=\"col\">" + formatStatus(value.status) + "</td>\n        <td scope=\"col\" class=\"showTask\"><button type=\"button\" class=\"btn btn-info\" data-toggle=\"modal\" data-target=\".bd-example-modal-lg\" data-value=\"" + value.id + "\" id=\"btnShow\">Show task</button></td>\n        <td scope=\"col\" class=\"editPerson\" ><button type=\"button\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\".bd-example-modal-sm\" data-edit=\"" + value.id + "\" id=\"editPerson\">Edit</button></td>\n    </tr>";
   return content;
 }
 
 $(document).on('click', '#persons .showTask #btnShow', function () {
   var temp = $(this).attr('data-value');
-  var task = new PersonServie_1.PersonServie().getTaskById(temp);
-  console.log(task.toString());
+  var tasks = new PersonServie_1.PersonServie().getTaskById(temp);
+  $("#valuePerson").val(temp);
+  var tableEle = $("#tableTask tbody");
+
+  if (tasks.length > 0) {
+    var content_2;
+    tasks.forEach(function (value) {
+      return content_2 += processDataTable(value);
+    });
+    tableEle.html(content_2);
+  }
 });
+
+function processDataTable(x) {
+  var content = "<tr><th scope=\"row\">" + x.id + "</th><td>" + x.name + "</td></tr>";
+  return content;
+}
 
 function formatStatus(xxx) {
   if (xxx == "ACTIVE") {
@@ -17169,6 +17156,20 @@ $(document).ready(function () {
     var param = new Search_1.Search(fisrtname, status);
     document.location.search = param.toString();
   });
+});
+$(document).on('click', '#persons .editPerson #editPerson', function () {
+  var temp = $(this).attr('data-edit');
+  var p = new PersonServie_1.PersonServie().getOne(temp);
+  $("#editModal #txtFirstName").val(p.firstname);
+  $("#editModal #txtLastName").val(p.lastname);
+  $("#editModal #txtAge").val(p.age);
+  $("#editModal #txtDate").val(p.dob);
+  $("#editModal #txtSalary").val(p.salary);
+  var date = formatDate(p.dob);
+  $("#editModal #txtDate").val(moment(date).format('mm/dd/yyyy'));
+});
+$("#statusEdit").on('change', function () {
+  alert(this.value);
 }); // $(document).ready(function () {
 //     let xxx = $(location).attr("pathname");
 //     console.log(ENDPOINT.person.personID + xxx);
@@ -17212,7 +17213,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51307" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52705" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

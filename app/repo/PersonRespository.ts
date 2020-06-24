@@ -56,8 +56,8 @@ export class PersonRespository implements ICrudReponsitory<Person, any> {
         })
     }
 
-    getTaskById(value): Task {
-        let task: Task = new Task(null, null, null);
+    getTaskById(value): Task[] {
+        let task: Task[] = [];
         $.ajax({
             url: ENDPOINT.task.getById.replace("{id}", value),
             method: 'GET',

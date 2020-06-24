@@ -17,7 +17,7 @@ export class PersonServie {
         this.pr.save(p);
     }
 
-    getTaskById(k): Task {
+    getTaskById(k): Task[] {
         return this.pr.getTaskById(k);
     }
 }

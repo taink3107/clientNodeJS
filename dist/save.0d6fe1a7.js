@@ -11245,7 +11245,11 @@ exports.ENDPOINT = {
     personID: BASE_URL + "/person/{id}",
     save: BASE_URL + "/person/save"
   },
-  account: BASE_URL + "/account"
+  account: BASE_URL + "/account",
+  task: {
+    getById: BASE_URL + "/cate/{id}",
+    save: BASE_URL + "/cate/save"
+  }
 };
 },{}],"app/repo/PersonRespository.ts":[function(require,module,exports) {
 "use strict";
@@ -11317,6 +11321,23 @@ function () {
     });
   };
 
+  PersonRespository.prototype.getTaskById = function (value) {
+    var task = [];
+    $.ajax({
+      url: Constants_1.ENDPOINT.task.getById.replace("{id}", value),
+      method: 'GET',
+      contentType: 'application/json',
+      async: false,
+      success: function success(data) {
+        $.extend(task, data);
+      },
+      error: function error() {
+        alert("error");
+      }
+    });
+    return task;
+  };
+
   return PersonRespository;
 }();
 
@@ -11350,11 +11371,101 @@ function () {
     this.pr.save(p);
   };
 
+  PersonServie.prototype.getTaskById = function (k) {
+    return this.pr.getTaskById(k);
+  };
+
   return PersonServie;
 }();
 
 exports.PersonServie = PersonServie;
-},{"../repo/PersonRespository":"app/repo/PersonRespository.ts"}],"app/save.ts":[function(require,module,exports) {
+},{"../repo/PersonRespository":"app/repo/PersonRespository.ts"}],"app/domain/Task.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Task = void 0;
+
+var Task =
+/** @class */
+function () {
+  function Task(name, personId) {
+    this.name = name;
+    this.person = personId;
+  }
+
+  Task.prototype.toString = function () {
+    return "id=" + this.id + "name" + this.name + " " + this.person.firstname;
+  };
+
+  return Task;
+}();
+
+exports.Task = Task;
+},{}],"app/repo/TaskRespon.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TaskRespon = void 0;
+
+var Constants_1 = require("../util/Constants");
+
+var $ = require("jquery");
+
+var TaskRespon =
+/** @class */
+function () {
+  function TaskRespon() {}
+
+  TaskRespon.prototype.save = function (task) {
+    $.ajax({
+      url: Constants_1.ENDPOINT.task.save,
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(task),
+      async: false,
+      success: function success(data) {
+        alert("sucess");
+      },
+      error: function error() {
+        alert("error");
+      }
+    });
+  };
+
+  return TaskRespon;
+}();
+
+exports.TaskRespon = TaskRespon;
+},{"../util/Constants":"app/util/Constants.ts","jquery":"node_modules/jquery/dist/jquery.js"}],"app/service/TaskService.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TaskService = void 0;
+
+var TaskRespon_1 = require("../repo/TaskRespon");
+
+var TaskService =
+/** @class */
+function () {
+  function TaskService() {
+    this.taskRespon = new TaskRespon_1.TaskRespon();
+  }
+
+  TaskService.prototype.save = function (task) {
+    return this.taskRespon.save(task);
+  };
+
+  return TaskService;
+}();
+
+exports.TaskService = TaskService;
+},{"../repo/TaskRespon":"app/repo/TaskRespon.ts"}],"app/save.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11366,6 +11477,12 @@ var $ = require("jquery");
 var Person_1 = require("./domain/Person");
 
 var PersonServie_1 = require("./service/PersonServie");
+
+var PersonRespository_1 = require("./repo/PersonRespository");
+
+var Task_1 = require("./domain/Task");
+
+var TaskService_1 = require("./service/TaskService");
 
 var personService = new PersonServie_1.PersonServie();
 $("#save").click(function (e) {
@@ -11381,7 +11498,19 @@ $("#save").click(function (e) {
   console.log(per);
   personService.save(per);
 });
-},{"jquery":"node_modules/jquery/dist/jquery.js","./domain/Person":"app/domain/Person.ts","./service/PersonServie":"app/service/PersonServie.ts"}],"C:/Users/Tai Khanh Nguyen/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+$(document).ready(function () {
+  $("#submitTask").click(function (e) {
+    e.preventDefault();
+    var text = $("#text").val();
+    var idPerson = $("#valuePerson").val();
+    var person = new PersonRespository_1.PersonRespository().findOne(idPerson);
+    var task = new Task_1.Task(text, person);
+    console.log(task);
+    new TaskService_1.TaskService().save(task);
+    text.html();
+  });
+});
+},{"jquery":"node_modules/jquery/dist/jquery.js","./domain/Person":"app/domain/Person.ts","./service/PersonServie":"app/service/PersonServie.ts","./repo/PersonRespository":"app/repo/PersonRespository.ts","./domain/Task":"app/domain/Task.ts","./service/TaskService":"app/service/TaskService.ts"}],"C:/Users/Tai Khanh Nguyen/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -11409,7 +11538,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61033" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52705" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

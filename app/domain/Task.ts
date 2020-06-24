@@ -1,15 +1,16 @@
+import {Person} from "./Person";
+
 export class Task {
     id: number;
     name: string;
-    personId: number;
+    person: Person;
 
-    constructor(id: number, name: string, personId: number) {
-        this.id = id;
+    constructor(name: string, personId: Person) {
         this.name = name;
-        this.personId = personId;
+        this.person = personId;
     }
 
     toString(): string {
-        return "id=" + this.id + "name" + this.name;
+        return "id=" + this.id + "name" + this.name + " " + this.person.firstname;
     }
 }
