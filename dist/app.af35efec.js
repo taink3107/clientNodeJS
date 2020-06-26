@@ -11243,12 +11243,14 @@ exports.ENDPOINT = {
   person: {
     list: BASE_URL + "/person",
     personID: BASE_URL + "/person/{id}",
-    save: BASE_URL + "/person/save"
+    save: BASE_URL + "/person/save",
+    update: BASE_URL + "/person/update"
   },
   account: BASE_URL + "/account",
   task: {
     getById: BASE_URL + "/cate/{id}",
-    save: BASE_URL + "/cate/save"
+    save: BASE_URL + "/cate/save",
+    isExist: BASE_URL + "/cate/exist/{id}"
   }
 };
 },{}],"app/repo/PersonRespository.ts":[function(require,module,exports) {
@@ -11338,6 +11340,24 @@ function () {
     return task;
   };
 
+  PersonRespository.prototype.update = function (per) {
+    console.log("XXX");
+    console.log(JSON.stringify(per));
+    $.ajax({
+      url: Constants_1.ENDPOINT.person.update,
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(per),
+      async: false,
+      success: function success(data) {
+        alert("sucess");
+      },
+      error: function error() {
+        alert("error");
+      }
+    });
+  };
+
   return PersonRespository;
 }();
 
@@ -11373,6 +11393,10 @@ function () {
 
   PersonServie.prototype.getTaskById = function (k) {
     return this.pr.getTaskById(k);
+  };
+
+  PersonServie.prototype.update = function (p) {
+    this.pr.update(p);
   };
 
   return PersonServie;
@@ -17065,7 +17089,7 @@ function () {
   function Search(firstname, status) {
     this.firstname = firstname; // Sua lai status
 
-    this.status = "";
+    this.status = status;
   }
 
   Search.prototype.toString = function () {
@@ -17076,7 +17100,97 @@ function () {
 }();
 
 exports.Search = Search;
-},{}],"app/index.ts":[function(require,module,exports) {
+},{}],"app/repo/TaskRespon.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TaskRespon = void 0;
+
+var Constants_1 = require("../util/Constants");
+
+var $ = require("jquery");
+
+var TaskRespon =
+/** @class */
+function () {
+  function TaskRespon() {}
+
+  TaskRespon.prototype.save = function (task) {
+    var temp = $("#editModal .modal-body");
+    temp.html("");
+    $.ajax({
+      url: Constants_1.ENDPOINT.task.save,
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(task),
+      async: false,
+      success: function success(data) {
+        temp.html("sucess");
+      },
+      error: function error(_error) {
+        var content = "";
+        var json_response = _error.responseJSON.errors;
+        json_response.forEach(function (x) {
+          return content += x.defaultMessage;
+        });
+        temp.html(content);
+      }
+    });
+  };
+
+  TaskRespon.prototype.isExist = function (id) {
+    var value;
+    $.ajax({
+      url: Constants_1.ENDPOINT.task.isExist.replace("{id}", id),
+      method: 'POST',
+      contentType: 'application/json',
+      async: false,
+      success: function success(data) {
+        value = data;
+      },
+      error: function error() {
+        value = 0;
+      }
+    });
+    return value;
+  };
+
+  return TaskRespon;
+}();
+
+exports.TaskRespon = TaskRespon;
+},{"../util/Constants":"app/util/Constants.ts","jquery":"node_modules/jquery/dist/jquery.js"}],"app/service/TaskService.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TaskService = void 0;
+
+var TaskRespon_1 = require("../repo/TaskRespon");
+
+var TaskService =
+/** @class */
+function () {
+  function TaskService() {
+    this.taskRespon = new TaskRespon_1.TaskRespon();
+  }
+
+  TaskService.prototype.save = function (task) {
+    return this.taskRespon.save(task);
+  };
+
+  TaskService.prototype.isExist = function (id) {
+    return this.taskRespon.isExist(id);
+  };
+
+  return TaskService;
+}();
+
+exports.TaskService = TaskService;
+},{"../repo/TaskRespon":"app/repo/TaskRespon.ts"}],"app/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17085,12 +17199,18 @@ Object.defineProperty(exports, "__esModule", {
 
 var $ = require("jquery");
 
+var Person_1 = require("./domain/Person");
+
 var PersonServie_1 = require("./service/PersonServie");
 
 var moment = require("moment");
 
 var Search_1 = require("./domain/Search");
 
+var TaskService_1 = require("./service/TaskService");
+
+var personServie = new PersonServie_1.PersonServie();
+var taskService = new TaskService_1.TaskService();
 $(document).ready(function () {
   var searchParams = new URLSearchParams(window.location.search);
   var param = searchParams.get("search");
@@ -17106,12 +17226,13 @@ $(document).ready(function () {
     });
     ulEle.append(content_1);
   }
-});
+}); //function fillPerson Daskboard
 
 function processDate(value) {
-  var content = "<tr>\n        <td scope=\"col\">" + value.id + "</td>\n        <td scope=\"col\">" + value.firstname + " " + value.lastname + "</td>\n        <td scope=\"col\">" + value.age + "</td>\n        <td scope=\"col\">" + formatCurrency(value.salary, "VND") + "</td>\n        <td scope=\"col\">" + formatDate(value.dob) + "</td>\n        <td scope=\"col\">" + formatStatus(value.status) + "</td>\n        <td scope=\"col\" class=\"showTask\"><button type=\"button\" class=\"btn btn-info\" data-toggle=\"modal\" data-target=\".bd-example-modal-lg\" data-value=\"" + value.id + "\" id=\"btnShow\">Show task</button></td>\n        <td scope=\"col\" class=\"editPerson\" ><button type=\"button\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\".bd-example-modal-sm\" data-edit=\"" + value.id + "\" id=\"editPerson\">Edit</button></td>\n    </tr>";
+  var content = "<tr>\n        <td scope=\"col\">" + value.id + "</td>\n        <td scope=\"col\">" + value.firstname + " " + value.lastname + "</td>\n        <td scope=\"col\">" + value.age + "</td>\n        <td scope=\"col\">" + formatCurrency(value.salary, "VND") + "</td>\n        <td scope=\"col\">" + formatDate(value.dob) + "</td>\n        <td scope=\"col\">" + formatStatus(value.status) + "</td>\n        <td scope=\"col\" class=\"showTask\"><button type=\"button\" class=\"btn btn-outline-dark\"  data-toggle=\"modal\" data-target=\".bd-example-modal-lg\" data-value=\"" + value.id + "\" id=\"btnShow\">Show task</button></td>\n        <td scope=\"col\" class=\"editPerson\" ><button type=\"button\" class=\"btn btn-outline-dark\"  data-toggle=\"modal\" data-target=\".bd-example-modal-sm\" data-edit=\"" + value.id + "\" id=\"editPerson\">Edit</button></td>\n    </tr>";
   return content;
-}
+} //function Show Task
+
 
 $(document).on('click', '#persons .showTask #btnShow', function () {
   var temp = $(this).attr('data-value');
@@ -17126,12 +17247,13 @@ $(document).on('click', '#persons .showTask #btnShow', function () {
     });
     tableEle.html(content_2);
   }
-});
+}); //child show Task
 
 function processDataTable(x) {
   var content = "<tr><th scope=\"row\">" + x.id + "</th><td>" + x.name + "</td></tr>";
   return content;
-}
+} //formatStatus
+
 
 function formatStatus(xxx) {
   if (xxx == "ACTIVE") {
@@ -17139,53 +17261,95 @@ function formatStatus(xxx) {
   } else {
     return "Chưa kích hoạt";
   }
-}
+} //format Currency
+
 
 function formatCurrency(n, currency) {
   return n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + currency;
-}
+} //format date
+
 
 function formatDate(date) {
   return moment(date).format('MMMM/DD/YYYY');
-}
+} //function Search
+
 
 $(document).ready(function () {
   $("#btnSearch").on("click", function () {
-    var fisrtname = $("#firstname").val();
-    var status = $("#status").val() == 1 ? "ACTIVE" : "INACTIVE";
+    var fisrtname = $("#inputName").val();
+    var status = $("#inputGroupSelect").val();
+    console.log(status);
     var param = new Search_1.Search(fisrtname, status);
     document.location.search = param.toString();
+  }); //check Status
+
+  $("#statusEdit").change(function () {
+    var selectedCountry = $(this).children("option:selected").val();
+    console.log(selectedCountry);
   });
 });
-$(document).on('click', '#persons .editPerson #editPerson', function () {
-  var temp = $(this).attr('data-edit');
-  var p = new PersonServie_1.PersonServie().getOne(temp);
+
+function fill() {
+  var tlb = $("#editModal .modal-body");
+  var content = "<form id=\"formInfo\">\n                            <input type=\"text\" class=\"form-control mb-1\" id=\"txtFirstName\" name=\"firstname\"\n                                   placeholder=\"T\xEAn\"\n                                   aria-label=\"task\" aria-describedby=\"basic-addon1\">\n                            <input type=\"text\" class=\"form-control mb-1\" id=\"txtLastName\" name=\"lastname\"\n                                   placeholder=\"H\u1ECD\"\n                                   aria-label=\"task\" aria-describedby=\"basic-addon1\">\n                            <input type=\"number\" class=\"form-control mb-1\" id=\"txtAge\" name=\"age\" placeholder=\"Tu\u1ED5i\"\n                                   aria-label=\"task\" aria-describedby=\"basic-addon1\">\n                            <input type=\"text\" step=\"any\" class=\"form-control mb-1\" name=\"salary\" id=\"txtSalary\"\n                                   placeholder=\"L\u01B0\u01A1ng\"\n                                   aria-label=\"task\" aria-describedby=\"basic-addon1\">\n                            <input type=\"date\" class=\"form-control mb-1\" id=\"txtDate\" name=\"dob\" placeholder=\"DoB\"\n                                   aria-label=\"task\" aria-describedby=\"basic-addon1\">\n                            <div class=\"row\">\n                                <div class=\"col text-md-right\">\n                                    <select id=\"statusEdit\" class=\"custom-select-sm mb-1\" name=\"status\">\n                                        <option value=\"ACTIVE\">ACTIVE</option>\n                                        <option value=\"INACTIVE\">INACTIVE</option>\n                                    </select>\n                                </div>\n                                <div class=\"col\">\n                                    <label>Status</label>\n                                </div>\n                            </div>\n                        </form>";
+  tlb.html(content);
+} //function edit
+
+
+$(document).ready(function () {
+  var temp;
+  var p;
+  var pNew;
+  $(document).on('click', '#persons .editPerson #editPerson', function () {
+    fill();
+    temp = $(this).attr('data-edit');
+    p = new PersonServie_1.PersonServie().getOne(temp);
+    fillFormEdit(p);
+  });
+  $(document).on('click', '.modal-footer #btnSave', function (event) {
+    event.preventDefault();
+    pNew = createPerson();
+    var pNew2 = new Person_1.Person("Tai", "Khanh", 18, 20000, null, "ACTIVE");
+    pNew.id = temp;
+    console.log(pNew);
+    console.log("p2");
+    console.log(JSON.stringify(pNew2));
+    var value = taskService.isExist(temp);
+    personServie.update(pNew);
+
+    if (value === 0) {//    personServie.save(pNew);
+    } else {
+      alert("Người dùng đang có 1 số công việc nên không thể thay đổi thông tin");
+    }
+  });
+}); //function get person
+
+function createPerson() {
+  var per;
+  var inputs = $("#formInfo :input");
+  var obj = $.map(inputs, function (x, y) {
+    // var o = {};
+    // o[x.name] = $(x).val();
+    // return o;
+    return $(x).val();
+  });
+  per.firstname = obj[0];
+  per.lastname = obj[1];
+  return obj;
+} //function fillPerson to Edit form
+
+
+function fillFormEdit(p) {
   $("#editModal #txtFirstName").val(p.firstname);
   $("#editModal #txtLastName").val(p.lastname);
   $("#editModal #txtAge").val(p.age);
   $("#editModal #txtDate").val(p.dob);
   $("#editModal #txtSalary").val(p.salary);
   var date = formatDate(p.dob);
-  $("#editModal #txtDate").val(moment(date).format('mm/dd/yyyy'));
-});
-$("#statusEdit").on('change', function () {
-  alert(this.value);
-}); // $(document).ready(function () {
-//     let xxx = $(location).attr("pathname");
-//     console.log(ENDPOINT.person.personID + xxx);
-//     let person: Person = new PersonServie().getOne(xxx);
-//     let h1Ele = $("#person");
-//     if (person.age != null) {
-//         h1Ele.html(
-
-/*`<i>${person.fisrtname} - ${person.age} - ${person.salary}</i>`
-)
-//*/
-//     } else {
-//         h1Ele.html(`del co thang nao ca`)
-//     }
-// })
-},{"jquery":"node_modules/jquery/dist/jquery.js","./service/PersonServie":"app/service/PersonServie.ts","moment":"node_modules/moment/moment.js","./domain/Search":"app/domain/Search.ts"}],"C:/Users/Tai Khanh Nguyen/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+  $("#editModal #txtDate").val(moment(date).format('YYYY-MM-DD'));
+  $("#statusEdit").val(p.status).change();
+}
+},{"jquery":"node_modules/jquery/dist/jquery.js","./domain/Person":"app/domain/Person.ts","./service/PersonServie":"app/service/PersonServie.ts","moment":"node_modules/moment/moment.js","./domain/Search":"app/domain/Search.ts","./service/TaskService":"app/service/TaskService.ts"}],"C:/Users/Tai Khanh Nguyen/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -17213,7 +17377,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52705" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63548" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

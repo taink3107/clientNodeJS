@@ -9,8 +9,8 @@ export class Search {
 
     constructor(firstname: string, status: string) {
         this.firstname = firstname;
-  // Sua lai status
-        this.status = "";
+        // Sua lai status
+        this.status = status;
     }
 
     toString() {

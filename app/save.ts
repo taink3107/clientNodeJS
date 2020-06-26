@@ -24,15 +24,28 @@ $("#save").click(function (e) {
     personService.save(per);
 })
 
+
+
 $(document).ready(function () {
     $("#submitTask").click(function (e) {
         e.preventDefault();
-        let text = $("#text").val();
+        let text = $("#textXXX").val();
         let idPerson = $("#valuePerson").val();
         let person: Person = new PersonRespository().findOne(idPerson);
         let task: Task = new Task(text, person);
-        console.log(task);
         new TaskService().save(task);
-        text.html();
-    })
+        //text.html();
+    });
+    $("#textXXX").keypress(function(event) {
+        if (event.keyCode == 13) {
+            let text = $("#textXXX").val();
+            let idPerson = $("#valuePerson").val();
+            let person: Person = new PersonRespository().findOne(idPerson);
+            let task: Task = new Task(text, person);
+            new TaskService().save(task);
+        };
+    });
 })
+
+
+

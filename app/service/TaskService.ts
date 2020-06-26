@@ -9,4 +9,7 @@ export class TaskService {
     save(task: Task) {
         return this.taskRespon.save(task);
     }
+    isExist(id) : any{
+        return this.taskRespon.isExist(id);
+    }
 }

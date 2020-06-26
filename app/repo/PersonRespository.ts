@@ -72,5 +72,23 @@ export class PersonRespository implements ICrudReponsitory<Person, any> {
         return task;
     }
 
+    update(per: Person) {
+
+        console.log("XXX");
+        console.log(JSON.stringify(per));
+        $.ajax({
+            url: ENDPOINT.person.update,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(per),
+            async: false,
+            success: (data) => {
+                alert("sucess");
+            }, error: () => {
+                alert("error");
+            }
+        })
+    }
+
 
 }

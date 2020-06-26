@@ -8,7 +8,6 @@ export class PersonServie {
     getAll(param): Person[] {
         return this.pr.findAll(param);
     }
-
     getOne(k): Person {
         return this.pr.findOne(k);
     }
@@ -19,5 +18,8 @@ export class PersonServie {
 
     getTaskById(k): Task[] {
         return this.pr.getTaskById(k);
+    }
+    update(p : Person){
+        this.pr.update(p);
     }
 }

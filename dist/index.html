@@ -5,24 +5,27 @@
     <title>Title</title>
     <script src="/app.af35efec.js"></script>
     <script src="/save.0d6fe1a7.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 </head>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-<body style="background-color: darkgrey">
-<div class="container bg-white">
+
+<body style="background-color: lightgray">
+<div class="container" style="background: linen">
     <div class="mt-5">
         <div>
             <form class="form-inline">
                 <div class="form-group mb-2">
-                    <input type="text" class="form-control" id="inputPassword2" placeholder="họ và tên " style="margin-top: 5px">
+                    <input type="text" class="form-control" id="inputName" placeholder="họ và tên " style="margin-top: 5px; background: azure;">
                 </div>
                 <div class="form-group mx-sm-2 mb-1">
-                    <select class="custom-select" id="inputGroupSelect01">
+                    <select class="custom-select " style="background: azure;" id="inputGroupSelect">
                         <option selected="">All</option>
                         <option value="0">ACTIVE</option>
                         <option value="1">INACTIVE</option>
                     </select>
                 </div>
-                <button type="button" class="btn btn-outline-dark mb-2" style="margin-top: 5px">Tìm kiếm</button>
+                <button type="button" id="btnSearch" class="btn btn-outline-dark mb-2" style="margin-top: 5px">Tìm kiếm</button>
             </form>
         </div>
         <div>
@@ -44,7 +47,8 @@
             </table>
         </div>
         <div class="pb-2">
-            <button class="btn"><img src="https://img.icons8.com/metro/26/000000/add-user-male.png"></button>
+
+            <button class="btn" id="btnAddNew"><img src="https://img.icons8.com/metro/26/000000/add-user-male.png"> <a href="/save.html"></a></button>
         </div>
 
 
@@ -58,8 +62,8 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" class="form-control" id="text" placeholder="tạo công việc mới" aria-label="task" aria-describedby="basic-addon1">
-                        <button id="submitTask" class="btn mt-1"><img src="https://img.icons8.com/ios-glyphs/30/000000/add-property.png"> Thêm mới công việc
+                        <input type="text" class="form-control" id="textXXX" placeholder="tạo công việc mới" aria-label="task" aria-describedby="basic-addon1">
+                        <button id="submitTask" data-toggle="modal" data-target=".bd-example-modal-sm" class="btn mt-1"><img src="https://img.icons8.com/ios-glyphs/30/000000/add-property.png"> Thêm mới công việc
                         </button>
                         <input id="valuePerson" type="hidden">
                         <table class="table mt-3" id="tableTask">
@@ -75,13 +79,12 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Save changes</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal fade bd-example-modal-sm" id="editModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal fade bd-example-modal-sm" id="editModal" tabindex="-2" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -91,32 +94,20 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" class="form-control mb-1" id="txtFirstName" placeholder="Tên" aria-label="task" aria-describedby="basic-addon1">
-                        <input type="text" class="form-control mb-1" id="txtLastName" placeholder="Họ" aria-label="task" aria-describedby="basic-addon1">
-                        <input type="number" class="form-control mb-1" id="txtAge" placeholder="Tuổi" aria-label="task" aria-describedby="basic-addon1">
-                        <input type="text" step="any" class="form-control mb-1" id="txtSalary" placeholder="Lương" aria-label="task" aria-describedby="basic-addon1">
-                        <input type="date" class="form-control mb-1" id="txtDate" placeholder="DoB" aria-label="task" aria-describedby="basic-addon1">
-                        <div class="row">
-                            <div class="col text-md-right">
-                                <select id="statusEdit" readonly="true" class="custom-select-sm mb-1">
-                                    <option value="1">ACTIVE</option>
-                                    <option value="2">INACTIVE</option>
-                                </select>
-                            </div>
-                            <div class="col">
-                                <label>Status</label>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" id="btnSave" class="btn btn-secondary" data-toggle="popover" title="Popover Header" data-content="Some content inside the popover">Save changes
+                        </button>
+                        <button type="button" id="btnClose" class="btn btn-dark" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
